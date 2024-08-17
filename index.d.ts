@@ -1,5 +1,14 @@
 export default translate;
-export {translate, Translator, speak};
+export {
+	translate,
+	Translator,
+	speak,
+	singleTranslate,
+	batchTranslate,
+	languages,
+	isSupported,
+	getCode
+};
 
 declare function translate<Input extends googleTranslateApi.Input> (
 	input: Input,
@@ -19,6 +28,23 @@ declare function speak<Input extends googleTranslateApi.Input> (
 	input: Input,
 	opts?: googleTranslateApi.RequestOptions,
 ): googleTranslateApi.SpeakResponseStructure<Input>;
+
+declare function singleTranslate (
+	input: string,
+	opts?: googleTranslateApi.RequestOptions,
+) : googleTranslateApi.TranslationResponseStructure<string>;
+
+declare const batchTranslate: typeof translate;
+
+declare const languages: typeof googleTranslateApi.languages;
+
+declare function isSupported(
+	desiredLang: string
+): boolean;
+
+declare function getCode(
+	desiredLang: string
+): boolean | null;
 
 export declare namespace googleTranslateApi {
 	interface TranslationOptions {
