@@ -65,8 +65,8 @@ export declare namespace googleTranslateApi {
 		text: string; // Translated text
 		pronunciation?: string; // Pronunciation guide (if available)
 		from: {
-		language: TranslatedLanguage;
-		text: TranslatedText;
+			language: TranslatedLanguage;
+			text: TranslatedText;
 		};
 		raw: string; // Raw response from the API
 	}
