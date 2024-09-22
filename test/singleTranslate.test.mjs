@@ -19,7 +19,7 @@ describe('singleTranslate()', function () {
 		try {
 			const res = await singleTranslate('These sentences are test.  Just to make sure this works.  It should!', {from: 'en', to: 'ja'});
 
-			assert.equal(res.text, 'これらの文はテストです。これが機能することを確認するためです。それはすべきです！');
+			assert.equal(res.text, 'これらの文はテストです。  これが機能することを確認するためです。  それはすべきです！');
 		} catch (e) {
 			assert.equal(e.message, 'Too Many Requests');
 		}
