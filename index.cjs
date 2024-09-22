@@ -1,6 +1,6 @@
 'use strict';
-const translate = require('./lib/translate.cjs');
-const Translator = require('./lib/Translator.cjs');
+const translate = require('./lib/translation/translate.cjs');
+const Translator = require('./lib/translation/Translator.cjs');
 const singleTranslate = require('./lib/translation/singleTranslate.cjs');
 const batchTranslate = require('./lib/translation/batchTranslate.cjs');
 const { langs, isSupported, getCode } = require('./lib/languages.cjs');
