@@ -4,92 +4,123 @@
  */
 
 // Main export functions
-export default translate;
-export {
-	translate,
-	Translator,
-	speak,
-	singleTranslate,
-	batchTranslate,
-	languages,
-	isSupported,
-	getCode,
-};
+export = translate;
 
-// Namespace containing all type definitions and interfaces
-export declare namespace googleTranslateApi {
+/**
+ * Main translation function
+ * @param input - Text, array, or object of texts to translate
+ * @param opts - Translation options
+ * @returns Promise resolving to translation response(s)
+ */
+declare function translate<Input extends translate.Input>(
+	input: Input,
+	opts?: translate.RequestOptions,
+): translate.TranslationResponseStructure<Input>;
+
+declare namespace translate {
+	/**
+	 * Main translation function
+	 * @param input - Text, array, or object of texts to translate
+	 * @param opts - Translation options
+	 * @returns Promise resolving to translation response(s)
+	 */
+	export function translate<Input extends translate.Input>(
+		input: Input,
+		opts?: translate.RequestOptions,
+	): translate.TranslationResponseStructure<Input>;
+
 	/**
 	 * Options for translation requests
 	 */
 	interface TranslationOptions {
-		from?: string; // Source language
-		to?: string; // Target language
-		forceFrom?: boolean; // Force use of 'from' language
-		forceTo?: boolean; // Force use of 'to' language
-		autoCorrect?: boolean; // Enable auto-correction
+		/** The `text` language. Must be `auto` or one of the codes/names (not case sensitive) contained in [languages.cjs](https://github.com/AidanWelch/google-translate-api/blob/master/lib/languages.cjs) @default "auto" */
+		from?: string;
+		/** The language to which the text should be translated. Must be one of the codes/names (case sensitive!) contained in [languages.cjs](https://github.com/AidanWelch/google-translate-api/blob/master/lib/languages.cjs) @default "en" */
+		to?: string;
+		/** Forces the translate function to use the `from` option as the ISO code, without checking the languages list @default false */
+		forceFrom?: boolean;
+		/** Forces the translate function to use the `to` option as the ISO code, without checking the languages list @default false */
+		forceTo?: boolean;
+		/** Auto corrects the inputs, and uses those corrections in the translation @default false */
+		autoCorrect?: boolean;
 	}
 
 	/**
 	 * Extended options for API requests
 	 */
 	export interface RequestOptions extends TranslationOptions {
-		tld?: string; // Top-level domain for the translate host
-		requestFunction?: Function; // Custom request function
-		forceBatch?: boolean; // Force batch translation
-		fallbackBatch?: boolean; // Allow batch as fallback
-		requestOptions?: object; // Additional request options
-		rejectOnPartialFail?: boolean; // Reject on partial failure
+		/** TLD for Google translate host to be used in API calls: `https://translate.google.{tld}` @default "com" */
+		tld?: string;
+		/** Function inputs should take `(url, requestOptions)` and mimic the response of the Fetch API with a `res.text()` and `res.json()` method @default fetch */
+		requestFunction?: Function;
+		/** Forces the translate function to use the batch endpoint, which is less likely to be rate limited than the single endpoint @default true */
+		forceBatch?: boolean;
+		/** Enables falling back to the batch endpoint if the single endpoint fails @default true */
+		fallbackBatch?: boolean;
+		/** The options used by the `requestFunction`. Must be in the style of [fetchinit](https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch) */
+		requestOptions?: object;
+		/** When `true`, rejects whenever any translation in a batch fails—otherwise will just return `null` instead of that translation @default true */
+		rejectOnPartialFail?: boolean;
 	}
 
 	/**
 	 * Represents a translated language
 	 */
-	interface TranslatedLanguage {
-		didYouMean: boolean; // Indicates if this was a suggested language
-		iso: string; // ISO code of the language
+	export interface TranslatedLanguage {
+		/** `true` if the API suggested a correction in the source language */
+		didYouMean: boolean;
+		/** The [code of the language](https://github.com/AidanWelch/google-translate-api/blob/master/lib/languages.cjs) that the API has recognized in the `text` */
+		iso: string;
 	}
 
 	/**
 	 * Represents translated text
 	 */
-	interface TranslatedText {
-		autoCorrected: boolean; // Indicates if text was auto-corrected
-		value: string; // The translated text
-		didYouMean: boolean; // Indicates if this was a suggested translation
+	export interface TranslatedText {
+		/** `true` if the API has auto corrected the `text` */
+		autoCorrected: boolean;
+		/** The auto corrected `text` or the `text` with suggested corrections */
+		value: string;
+		/** `true` if the API has suggested corrections to the `text` and did not auto correct */
+		didYouMean: boolean;
 	}
 
 	/**
 	 * Response structure for a translation request
 	 */
 	export interface TranslationResponse {
-		text: string; // Translated text
-		pronunciation?: string; // Pronunciation guide (if available)
+		/** Translated text */
+		text: string;
+		/** Pronunciation guide (if available) */
+		pronunciation?: string;
 		from: {
 			language: TranslatedLanguage;
 			text: TranslatedText;
 		};
-		raw: string; // Raw response from the API
+		/** If `options.raw` is true, the raw response from Google Translate servers. Otherwise `''` */
+		raw: string;
 	}
 
 	/**
 	 * Query options for translation
 	 */
 	interface OptionQuery extends TranslationOptions {
-		text: string; // Text to translate
+		/** Text to translate */
+		text: string;
 	}
 
 	// Type aliases for various input formats
 	type Query = string | OptionQuery;
 	export type Input = string | Query[] | { [key: string]: Query };
 
-	// Type for translation response based on input type
+	/** Type for translation response based on input type */
 	export type TranslationResponseStructure<T> = T extends string
 		? Promise<TranslationResponse>
 		: T extends Query[]
 			? Promise<TranslationResponse[]>
 			: Promise<{ [key in keyof T]: TranslationResponse }>;
 
-	// Type for speak response based on input type
+	/** Type for speak response based on input type */
 	export type SpeakResponseStructure<T> = T extends string
 		? Promise<string>
 		: T extends Query[]
@@ -101,7 +132,7 @@ export declare namespace googleTranslateApi {
 	 * Generated from https://translate.google.com
 	 * See https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 	 */
-	export enum languages  {
+	export enum languages {
 		"auto" = "Detect language",
 		"ab" = "Abkhaz",
 		"ace" = "Acehnese",
@@ -184,6 +215,7 @@ export declare namespace googleTranslateApi {
 		"cnh" = "Hakha Chin",
 		"ha" = "Hausa",
 		"haw" = "Hawaiian",
+		"he" = "Hebrew",
 		"iw" = "Hebrew",
 		"hil" = "Hiligaynon",
 		"hi" = "Hindi",
@@ -348,88 +380,57 @@ export declare namespace googleTranslateApi {
 		"zu" = "Zulu",
 	}
 
-	namespace languages {
-		/**
-		 * Returns the ISO 639-1 code of the desired language
-		 * @param desiredLang - The name or code (case sensitive) of the desired language
-		 * @returns The ISO 639-1 code of the language or false if not supported
-		 */
-		function getCode(desiredLang: string): string | boolean;
-
-		/**
-		 * Checks if the desired language is supported by Google Translate
-		 * @param desiredLang - The ISO 639-1 code or name of the desired language
-		 * @returns True if supported, false otherwise
-		 */
-		function isSupported(desiredLang: string): boolean;
+	/**
+	 * Translator class for creating reusable translator instances
+	 */
+	export class Translator {
+		constructor(options?: RequestOptions);
+		translate<Input extends translate.Input>(
+			input: Input,
+			opts?: RequestOptions,
+		): TranslationResponseStructure<Input>;
+		options: RequestOptions;
 	}
-}
 
-/**
- * Main translation function
- * @param input - Text, array, or object of texts to translate
- * @param opts - Translation options
- * @returns Promise resolving to translation response(s)
- */
-declare function translate<Input extends googleTranslateApi.Input>(
-	input: Input,
-	opts?: googleTranslateApi.RequestOptions,
-): googleTranslateApi.TranslationResponseStructure<Input>;
-
-/**
- * Translator class for creating reusable translator instances
- */
-declare class Translator {
-	constructor(options?: googleTranslateApi.RequestOptions);
-	translate<Input extends googleTranslateApi.Input>(
+	/**
+	 * Function to get spoken audio of translated text
+	 * @param input - Text, array, or object of texts to speak
+	 * @param opts - Translation options, the `to` field is used for the language spoken in
+	 * @returns Promise resolving to Base64 string(s) encoding mp3 audio
+	 */
+	export function speak<Input extends translate.Input>(
 		input: Input,
-		opts?: googleTranslateApi.RequestOptions,
-	): googleTranslateApi.TranslationResponseStructure<Input>;
-	options: googleTranslateApi.RequestOptions;
+		opts?: RequestOptions,
+	): SpeakResponseStructure<Input>;
+
+	/**
+	 * Function to translate a single string
+	 * @param input - Text to translate
+	 * @param opts - Translation options
+	 * @returns Promise resolving to translation response
+	 */
+	export function singleTranslate(
+		input: string,
+		opts?: RequestOptions,
+	): TranslationResponseStructure<string>;
+
+	/**
+	 * Bypass any single translate options and forces batch translation
+	 */
+	export const batchTranslate: typeof translate;
+
+
+	/**
+	 * Returns true if the desiredLang is supported by Google Translate and false otherwise
+	 * @param desiredLang – the ISO 639-1 code or the name of the desired language
+	 * @returns True if supported, false otherwise
+	 */
+	export function isSupported(desiredLang: string): boolean;
+
+	/**
+	 * Returns the ISO 639-1 code of the desiredLang – if it is supported by Google Translate
+	 * @param desiredLang – the name or the code (case sensitive) of the desired language
+	 * @returns The ISO 639-1 code of the language or null if the language is not supported
+	 */
+	export function getCode(desiredLang: string): string | null;
 }
-
-/**
- * Function to get spoken audio of translated text
- * @param input - Text, array, or object of texts to speak
- * @param opts - Translation options
- * @returns Promise resolving to Base64 string(s) encoding mp3 audio
- */
-declare function speak<Input extends googleTranslateApi.Input>(
-	input: Input,
-	opts?: googleTranslateApi.RequestOptions,
-): googleTranslateApi.SpeakResponseStructure<Input>;
-
-/**
- * Function to translate a single string
- * @param input - Text to translate
- * @param opts - Translation options
- * @returns Promise resolving to translation response
- */
-declare function singleTranslate(
-	input: string,
-	opts?: googleTranslateApi.RequestOptions,
-): googleTranslateApi.TranslationResponseStructure<string>;
-
-/**
- * Bypass any single translate options and forces batch translation
- */
-declare const batchTranslate: typeof translate;
-
-/**
- * Object containing supported languages
- */
-declare const languages: typeof googleTranslateApi.languages;
-
-/**
- * Checks if a language is supported
- * @param desiredLang - Language to check
- * @returns True if supported, false otherwise
- */
-declare function isSupported(desiredLang: string): boolean;
-
-/**
- * Gets the language code for a given language name
- * @param desiredLang - Language name
- * @returns Language code if found, null otherwise
- */
-declare function getCode(desiredLang: string): string | null;

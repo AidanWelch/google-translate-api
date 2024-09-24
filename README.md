@@ -233,6 +233,7 @@ The text to be translated, with optionally specific options for that text
 ### Returns an `object` | `object[]` | `{[key]: object}`}:
 Matches the structure of the input, so returns just the individual object if just a string is input, an array if an array is input, object with the same keys if an object is input.  Regardless of that, each returned value will have this schema:
 - `text` *(string)* – The translated text.
+- `pronunciation` *(string)* | *(undefined)* – Pronunciation guide (if available)
 - `from` *(object)*
   - `language` *(object)*
     - `didYouMean` *(boolean)* - `true` if the API suggest a correction in the source language
