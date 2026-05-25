@@ -22,9 +22,9 @@
     "eslint": "^8.25.0",
     "eslint-plugin-mocha": "^10.1.0",
     "eslint-plugin-n": "^15.6.0",
-    "mocha": "^10.7.3",
-    "np": "^7.6.2",
-    "tsd": "^0.31.2"
+    "mocha": "^11.7.6",
+    "np": "^11.2.1",
+    "tsd": "^0.33.0"
   },
   "repository": {
     "type": "git",
