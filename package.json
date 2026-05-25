@@ -1,6 +1,6 @@
 {
   "name": "google-translate-api-x",
-  "version": "10.7.2",
+  "version": "10.7.3",
   "description": "A free and unlimited API for Google Translate",
   "main": "./index.cjs",
   "module": "./index.cjs",
