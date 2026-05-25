@@ -14,14 +14,18 @@
   "scripts": {
     "prepare": "git config core.hooksPath ./.hooks",
     "lint": "eslint --ext .cjs,.mjs index.cjs lib test tools && tsd -f ./test",
+    "fix-lint": "eslint --ext .cjs,.mjs index.cjs lib test tools --fix && tsd -f ./test",
     "test": "mocha --parallel",
     "release": "npm run lint && npm t && np --yolo --no-release-draft",
     "update-langs": "node ./tools/updatelanguages.mjs"
   },
   "devDependencies": {
-    "eslint": "^8.25.0",
-    "eslint-plugin-mocha": "^10.1.0",
-    "eslint-plugin-n": "^15.6.0",
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.0",
+    "eslint-plugin-mocha": "^11.3.0",
+    "eslint-plugin-n": "^18.0.1",
+    "globals": "^17.6.0",
     "mocha": "^11.7.6",
     "np": "^11.2.1",
     "tsd": "^0.33.0"
@@ -56,7 +60,7 @@
   },
   "homepage": "https://github.com/AidanWelch/google-translate-api#readme",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=21.0.0"
   },
   "funding": {
     "type": "github",
