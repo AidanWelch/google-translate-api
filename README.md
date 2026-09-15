@@ -1,4 +1,5 @@
 # google-translate-api-x
+![NPM Downloads](https://img.shields.io/npm/dm/google-translate-api-x)
 [![Actions Status](https://github.com/AidanWelch/google-translate-api/workflows/autotests/badge.svg)](https://github.com/AidanWelch/google-translate-api/actions)
 [![NPM version](https://img.shields.io/npm/v/google-translate-api-x.svg)](https://www.npmjs.com/package/google-translate-api-x)
 
